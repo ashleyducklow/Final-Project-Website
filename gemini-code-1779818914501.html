@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UDA College Dance Nationals - Educational Guide</title>
+    <style>
+        /* --- GLOBAL STYLE RESET --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f4f6f9;
+            color: #2b2d42;
+            line-height: 1.6;
+        }
+
+        /* --- THEME COLORS --- 
+           Deep Navy (#1d3557) & Regal Gold (#d4af37) for a elite collegiate athletic feel
+        */
+        :root {
+            --primary: #1d3557;
+            --secondary: #457b9d;
+            --accent: #d4af37;
+            --light-bg: #ffffff;
+            --text-dark: #2b2d42;
+        }
+
+        /* --- HEADER & NAVIGATION --- */
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h1 {
+            font-size: 1.6rem;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+        }
+
+        nav a {
+            color: #edf2f4;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.6rem 1.1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            background-color: var(--accent);
+            color: var(--primary);
+        }
+
+        /* --- MULTI-PAGE ARCHITECTURE USING CSS TARGETS --- */
+        /* Hides all sub-pages by default, showing only the active one */
+        .page-content {
+            display: none;
+            padding: 3rem 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Default landing state (Home page visible initially) */
+        #home, 
+        .page-content:target {
+            display: block;
+        }
+
+        /* When another page is selected via nav clicks, override default home display */
+        .page-content:target ~ #home {
+            display: none;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- UI COMPONENTS & LAYOUTS --- */
+        .hero {
+            background: linear-gradient(rgba(29, 53, 87, 0.85), rgba(69, 123, 157, 0.85)), url('https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&q=80&w=1200') center/cover;
+            color: white;
+            text-align: center;
+            padding: 5rem 2rem;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            color: #f1faee;
+        }
+
+        h2.section-title {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--accent);
+            padding-bottom: 0.5rem;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--light-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--secondary);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        /* --- STYLISH DATA TABLE FOR DIVISIONS --- */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        /* --- CALLOUT BOXES --- */
+        .callout {
+            background-color: #e2ece9;
+            border-left: 5px solid var(--secondary);
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            margin-top: 5rem;
+            border-top: 4px solid var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>UDA <span>COLLEGE INSIDER</span></h1>
+        </div>
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#categories">Dance Categories</a>
+            <a href="#divisions">Divisions & Rules</a>
+            <a href="#preparation">Road to Nationals</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <section id="categories" class="page-content">
+            <h2 class="section-title">Official Performance Genres</h2>
+            <p>At the UDA National Championship, collegiate teams can showcase routines across four primary competitive dance styles. Each style values distinct athletic elements, pacing, and visual targets.</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <h3>Jazz Style</h3>
+                    <p>Focuses on technical execution, control, and stylistic expression. Teams incorporate continuous complex turn sequences, elite leaps, synchronization, and profound emotional execution or musicality.</p>
+                </div>
+                <div class="card">
+                    <h3>Pom Style</h3>
+                    <p>Highly energetic style characterized by the mandatory use of pom-poms. Focuses heavily on precise, clean, visual arm work, rapid formations transitions, and dynamic team synchronization.</p>
+                </div>
+                <div class="card">
+                    <h3>Hip Hop</h3>
+                    <p>Emphasizes street dance choreography, rhythm, execution, and group identity. Teams integrate distinct isolations, musical textures, floor tricks, and a commanding performance presence.</p>
+                </div>
+            </div>
+            
+            <div class="callout">
+                <strong>Did you know?</strong> In addition to these three core fields, teams can also enter the <strong>Game Day Division</strong>, which evaluates how effectively a dance team can lead a university stadium crowd alongside their school pep-bands and cheer squads!
+            </div>
+        </section>
+
+        <section id="divisions" class="page-content">
+            <h2 class="section-title">Understanding Competitive Brackets</h2>
+            <p>To keep the event fair and structurally accurate, universities are categorized based on their athletic program scale and institutional rules.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Division Tier</th>
+                        <th>School Profile Type</th>
+                        <th>Historical Legacy Powerhouses</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Division IA (D1A)</strong></td>
+                        <td>Large NCAA Football Bowl Subdivision (FBS) Schools</td>
+                        <td>Ohio State University, University of Minnesota, LSU</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Division I (D1)</strong></td>
+                        <td>NCAA Division I mid-major athletic programs</td>
+                        <td>Grand Canyon University, Cal State Fullerton, Weber State</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Open Division</strong></td>
+                        <td>NCAA Division II, Division III, and NAIA/Junior Colleges</td>
+                        <td>Minnesota State Mankato, Northwest Community College</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>The Judging Framework</h3>
+            <p>Panels of highly qualified industry professionals analyze performance across two core scoring tracks:</p>
+            <ul>
+                <li><strong>Execution & Technical Skill:</strong> Measures the physical synchronization, turn alignment, jump extension, placement consistency, and stamina of the dance roster.</li>
+                <li><strong>Choreography & Presentation:</strong> Measures musicality, transition creativity, dynamic visuals, and overall visual effect.</li>
+            </ul>
+        </section>
+
+        <section id="preparation" class="page-content">
+            <h2 class="section-title">The Road to Orlando</h2>
+            <p>Qualifying for and performing at the UDA National Championships at the ESPN Wide World of Sports Complex is a demanding multi-month commitment.</p>
+            
+            <div class="grid-3">
+                <div class="card">
+                    <h3>1. Summer Camp Qualification</h3>
+                    <p>The journey begins in July or August. Teams must attend a mandatory UDA regional camp, master intensive curriculum, and earn a "Superior Trophy" designation or specific bids to qualify officially for nationals.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Autumn Choreography</h3>
+                    <p>Choreographers are secured by late summer or early fall. Routines are completely structured and polished over hundreds of hours through the autumn academic calendar alongside game-day obligations.</p>
+                </div>
+                <div class="card">
+                    <h3>3. The Elimination Track</h3>
+                    <p>Once in Orlando, teams do not just perform once. They face intense multi-day schedules climbing from Preliminaries to Semi-Finals, before a highly selective fraction of teams secure a spot on the Finals floor.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="home" class="page-content">
+            <div class="hero">
+                <h2>The Pinnacle of Collegiate Dance</h2>
+                <p>Welcome to the ultimate learning repository dedicated to the Universal Dance Association (UDA) College National Championship—the most prestigious dance competition in collegiate athletics.</p>
+            </div>
+            
+            <h2 class="section-title">About the Championship</h2>
+            <p>Every year in mid-January, hundreds of elite university dance teams travel to the Walt Disney World Resort in Orlando, Florida. They compete head-to-head for the legendary white jackets and National Title trophies. This platform celebrates the intersection of elite athleticism, artistry, and university spirit.</p>
+            
+            <div class="callout">
+                <h3>Getting Started with this Guide</h3>
+                <p>Use the navigation tabs at the top right of the screen to explore specific modules on Dance Categories, Division Breakdown brackets, and the long process of qualifying for the main floor.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Collegiate Dance Educational Portal. All Information curated for educational resource analysis.</p>
+    </footer>
+
+</body>
+</html>
