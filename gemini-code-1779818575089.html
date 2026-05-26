@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowUp! - Tailored Makeup Canvas</title>
+    <style>
+        :root {
+            --bg-color: #fbf0f2;
+            --panel-color: #ffffff;
+            --accent-color: #ff8fa3;
+            --text-color: #4a4a4a;
+            
+            /* Base Dynamic Skin & Hair Elements */
+            --skin-base: #fcdcc7;
+            --hair-color: #f9e59b;
+            
+            /* Active Dynamic Makeup Layer Colors */
+            --concealer-color: transparent;
+            --contour-color: transparent;
+            --blush-color: transparent;
+            --eyeshadow-color: transparent;
+            --lips-color: transparent;
+            
+            /* Eyelash States */
+            --lash-stroke-width: 0px;
+            --lash-color: #22110a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            color: #ff5c7c;
+            font-size: 2.3rem;
+            margin-bottom: 3px;
+        }
+
+        header p {
+            font-style: italic;
+            color: #888;
+            font-size: 0.95rem;
+        }
+
+        .game-container {
+            display: flex;
+            width: 92%;
+            max-width: 1150px;
+            height: 78vh;
+            background: var(--panel-color);
+            border-radius: 24px;
+            box-shadow: 0 10px 35px rgba(255, 143, 163, 0.15);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        /* Avatar Display Left Side Panel */
+        .display-area {
+            flex: 1.1;
+            background: linear-gradient(135deg, #fffcfd 0%, #ffe9ec 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            border-right: 2px solid #fff3f5;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 320px;
+            height: 420px;
+        }
+
+        .hair-back {
+            position: absolute;
+            top: 35px;
+            left: 35px;
+            width: 250px;
+            height: 310px;
+            background-color: var(--hair-color);
+            border-radius: 120px 120px 50px 50px;
+            z-index: 1;
+        }
+
+        .neck {
+            position: absolute;
+            top: 260px;
+            left: 122px;
+            width: 76px;
+            height: 90px;
+            background-color: var(--skin-base);
+            border-radius: 0 0 25px 25px;
+            z-index: 2;
+            transition: background-color 0.4s ease;
+        }
+
+        .face {
+            position: absolute;
+            top: 75px;
+            left: 80px;
+            width: 160px;
+            height: 205px;
+            background-color: var(--skin-base);
+            border-radius: 80px 80px 85px 85px;
+            z-index: 3;
+            box-shadow: inset 0 -12px 25px rgba(212, 145, 120, 0.2);
+            transition: background-color 0.4s ease;
+        }
+
+        /* Face Complexion Makeup Layers */
+        .layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: inherit;
+            pointer-events: none;
+            transition: all 0.4s ease;
+        }
+
+        .layer.concealer {
+            background: radial-gradient(circle at 32% 53%, var(--concealer-color) 0%, transparent 16%),
+                        radial-gradient(circle at 68% 53%, var(--concealer-color) 0%, transparent 16%),
+                        radial-gradient(circle at 50% 40%, var(--concealer-color) 0%, transparent 20%);
+        }
+
+        .layer.contour {
+            background: radial-gradient(circle at 10% 64%, var(--contour-color) 0%, transparent 35%),
+                        radial-gradient(circle at 90% 64%, var(--contour-color) 0%, transparent 35%),
+                        radial-gradient(circle at 50% 10%, var(--contour-color) 0%, transparent 20%);
+            mix-blend-mode: multiply;
+        }
+
+        .layer.blush {
+            background: radial-gradient(circle at 25% 62%, var(--blush-color) 0%, transparent 30%),
+                        radial-gradient(circle at 75% 62%, var(--blush-color) 0%, transparent 30%);
+        }
+
+        /* Eyes and Features Components */
+        .eyes-group {
+            position: absolute;
+            top: 88px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 28px;
+            z-index: 4;
+        }
+
+        .eye-wrapper {
+            position: relative;
+            width: 36px;
+            height: 20px;
+        }
+
+        .eyeshadow-bg {
+            position: absolute;
+            top: -6px;
+            left: -4px;
+            width: 44px;
+            height: 22px;
+            background-color: var(--eyeshadow-color);
+            border-radius: 50% 50% 0 0;
+            filter: blur(2px);
+            opacity: 0.7;
+            transition: background-color 0.4s ease;
+        }
+
+        .eye-ball {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 2px 2px 18px 18px;
+            border-top: 1.5px solid #3a2518;
+            overflow: hidden;
+        }
+
+        .pupil {
+            position: absolute;
+            top: -1px;
+            left: 10px;
+            width: 16px;
+            height: 16px;
+            background-color: #4682b4;
+            border-radius: 50%;
+            border: 2px solid #1a1a1a;
+        }
+
+        /* Dynamic SVG Eyelashes Vector System overlaying Eyes */
+        .eyelashes-svg {
+            position: absolute;
+            top: -12px;
+            left: -6px;
+            width: 48px;
+            height: 25px;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .eyelashes-svg path {
+            fill: none;
+            stroke: var(--lash-color);
+            stroke-width: var(--lash-stroke-width);
+            stroke-linecap: round;
+            transition: stroke-width 0.3s ease, stroke 0.3s ease;
+        }
+
+        /* Upgraded Realistic SVG Lips Integration */
+        .lips-svg-container {
+            position: absolute;
+            bottom: 30px;
+            left: 50px;
+            width: 60px;
+            height: 24px;
+            z-index: 4;
+        }
+
+        .lips-svg-container svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .lip-path {
+            fill: var(--lips-color);
+            transition: fill 0.4s ease;
+        }
+
+        .hair-front {
+            position: absolute;
+            top: 45px;
+            left: 68px;
+            width: 184px;
+            height: 95px;
+            background-color: var(--hair-color);
+            border-radius: 60px 60px 12px 12px;
+            z-index: 5;
+        }
+
+        /* UI Control Panel Right Side Menu */
+        .control-panel {
+            flex: 1;
+            padding: 25px 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            background: #fff2f4;
+            padding: 8px 15px;
+            border-radius: 30px;
+        }
+
+        .step-indicator {
+            font-weight: bold;
+            color: #bbb;
+            font-size: 0.85rem;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .step-indicator.active {
+            color: white;
+            background-color: var(--accent-color);
+        }
+
+        .step-content {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .step-content.active {
+            display: flex;
+        }
+
+        .step-content h2 {
+            margin-bottom: 6px;
+            color: #333;
+            font-size: 1.4rem;
+        }
+
+        .step-content p {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: auto;
+        }
+
+        .option-card {
+            background: #fcfcfc;
+            border: 2px solid #efefef;
+            border-radius: 14px;
+            padding: 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .option-card:hover {
+            border-color: var(--accent-color);
+            transform: translateY(-1px);
+        }
+
+        .option-card.selected {
+            border-color: var(--accent-color);
+            background-color: #fff6f7;
+            font-weight: 600;
+        }
+
+        .color-preview {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .btn {
+            padding: 11px 24px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-back {
+            background-color: #eee;
+            color: #666;
+        }
+
+        .btn-next {
+            background-color: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 10px rgba(255, 143, 163, 0.3);
+        }
+
+        .btn:disabled {
+            background-color: #e5e5e5;
+            color: #aaa;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .preview-icon-label {
+            font-size: 1.4rem;
+            line-height: 38px;
+            height: 38px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>GlowUp!</h1>
+        <p>Design your customized makeup routine</p>
+    </header>
+
+    <div class="game-container">
+        <div class="display-area">
+            <div class="avatar-container">
+                <div class="hair-back"></div>
+                <div class="neck"></div>
+                <div class="face">
+                    <div class="layer concealer" id="layer-concealer"></div>
+                    <div class="layer contour" id="layer-contour"></div>
+                    <div class="layer blush" id="layer-blush"></div>
+                    
+                    <div class="eyes-group">
+                        <div class="eye-wrapper">
+                            <div class="eyeshadow-bg"></div>
+                            <div class="eye-ball"><div class="pupil"></div></div>
+                            <svg class="eyelashes-svg" viewBox="0 0 48 25">
+                                <path d="M 6,16 Q 24,11 42,16" />
+                                <path d="M 12,14 Q 10,7 6,5" />
+                                <path d="M 20,13 Q 19,5 14,3" />
+                                <path d="M 28,13 Q 29,4 25,2" />
+                                <path d="M 36,14 Q 39,6 38,4" />
+                            </svg>
+                        </div>
+                        
+                        <div class="eye-wrapper">
+                            <div class="eyeshadow-bg"></div>
+                            <div class="eye-ball"><div class="pupil"></div></div>
+                            <svg class="eyelashes-svg" viewBox="0 0 48 25">
+                                <path d="M 6,16 Q 24,11 42,16" />
+                                <path d="M 36,14 Q 38,7 42,5" />
+                                <path d="M 28,13 Q 29,5 34,3" />
+                                <path d="M 20,13 Q 19,4 23,2" />
+                                <path d="M 12,14 Q 9,6 10,4" />
+                            </svg>
+                        </div>
+                    </div>
+
+                    <div class="lips-svg-container">
+                        <svg viewBox="0 0 60 24">
+                            <path class="lip-path" d="M 4,12 C 12,7 22,5 30,10 C 38,5 48,7 56,12 C 48,15 38,14 30,14 C 22,14 12,15 4,12 Z" />
+                            <path class="lip-path" d="M 4,12 C 12,18 22,21 30,21 C 38,21 48,18 56,12 C 46,14 36,15 30,15 C 24,15 14,14 4,12 Z" />
+                        </svg>
+                    </div>
+                </div>
+                <div class="hair-front"></div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="progress-bar" id="progress-bar"></div>
+            <div id="steps-container"></div>
+
+            <div class="navigation-buttons">
+                <button class="btn btn-back" id="btn-prev" onclick="changeStep(-1)">Back</button>
+                <button class="btn btn-next" id="btn-next" onclick="changeStep(1)">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix dataset mapping the similar skin variations with matching dynamic values
+        const shadeMatrix = {
+            "Soft Alabaster": {
+                baseSkin: "#fbe4d5",
+                concealer: { match: "#fff3eb", sheer: "#fffafd" },
+                contour: { soft: "#e6c3af", deep: "#d3ad98" },
+                blush: { pink: "#ffcbd5", peach: "#ffded2", plum: "#e4b4c1" }
+            },
+            "Classic Ivory": {
+                baseSkin: "#faebd7",
+                concealer: { match: "#fff7ec", sheer: "#fffff3" },
+                contour: { soft: "#e2caad", deep: "#cbb193" },
+                blush: { pink: "#ffaebb", peach: "#ffd0bd", plum: "#d996ab" }
+            },
+            "Creamy Vanilla": {
+                baseSkin: "#fddcb9",
+                concealer: { match: "#ffe8cd", sheer: "#fff4e5" },
+                contour: { soft: "#dfbb95", deep: "#c5a078" },
+                blush: { pink: "#fc9db1", peach: "#ffbf9e", plum: "#cd8198" }
+            },
+            "Warm Sand": {
+                baseSkin: "#ebd0b4",
+                concealer: { match: "#f5dfc7", sheer: "#faebd8" },
+                contour: { soft: "#cca180", deep: "#b28866" },
+                blush: { pink: "#f28da3", peach: "#f3aa8f", plum: "#b56984" }
+            }
+        };
+
+        let selectedFoundationKey = "Soft Alabaster"; 
+        let currentStep = 0;
+
+        const stepsData = [
+            {
+                id: "foundation",
+                title: "1. Foundation & Tone nuance",
+                description: "Pick your baseline complexion nuance. Options are subtly varied for fine profile matching.",
+                options: [
+                    { name: "Soft Alabaster", value: "Soft Alabaster", preview: "#fbe4d5" },
+                    { name: "Classic Ivory", value: "Classic Ivory", preview: "#faebd7" },
+                    { name: "Creamy Vanilla", value: "Creamy Vanilla", preview: "#fddcb9" },
+                    { name: "Warm Sand", value: "Warm Sand", preview: "#ebd0b4" }
+                ]
+            },
+            {
+                id: "concealer",
+                title: "2. Concealer",
+                description: "Brighten shadows or treat target areas using shades mapped to your skin base profile.",
+                options: [
+                    { name: "Exact Conceal (Match)", type: "match" },
+                    { name: "Brightening Highlight (Sheer Lighter)", type: "sheer" },
+                    { name: "No Concealer", type: "transparent" }
+                ]
+            },
+            {
+                id: "contour",
+                title: "3. Contour",
+                description: "Add structural depth using natural shadows tailored directly to your foundation undertone level.",
+                options: [
+                    { name: "Soft Definition", type: "soft" },
+                    { name: "Deep Sculpting", type: "deep" },
+                    { name: "No Contour", type: "transparent" }
+                ]
+            },
+            {
+                id: "blush",
+                title: "4. Blush",
+                description: "Sweep on a healthy glow formulated to sit softly against your baseline skin depth.",
+                options: [
+                    { name: "Petal Pink", type: "pink" },
+                    { name: "Apricot Peach", type: "peach" },
+                    { name: "Muted Plum", type: "plum" },
+                    { name: "Skip Step", type: "transparent" }
+                ]
+            },
+            {
+                id: "eyeshadow",
+                title: "5. Eyeshadow",
+                description: "Apply beautiful pigment finishes across the upper eyelid area.",
+                options: [
+                    { name: "Nude Shimmer Rose", value: "#dfaf9b" },
+                    { name: "Satin Champagne", value: "#ebd2b4" },
+                    { name: "Soft Violet Smoke", value: "#aa9bc4" },
+                    { name: "Warm Terracotta", value: "#cc826a" }
+                ]
+            },
+            {
+                id: "eyelashes",
+                title: "6. Eyelashes",
+                description: "Choose structural definitions for the specialized, fine-lash vector overlays.",
+                options: [
+                    { name: "Soft Tint Liner", stroke: "1.5px", color: "#44332a", isIcon: true, icon: "✏️" },
+                    { name: "Mascara Definition", stroke: "2.5px", color: "#22110a", isIcon: true, icon: "👁️" },
+                    { name: "Dramatic Full Lash", stroke: "4px", color: "#050505", isIcon: true, icon: "✨" },
+                    { name: "Bare Natural Lashes", stroke: "0px", color: "transparent", isIcon: true, icon: "❌" }
+                ]
+            },
+            {
+                id: "lips",
+                title: "7. Lips Tints",
+                description: "Saturate upper and lower lip paths with a flattering statement hue.",
+                options: [
+                    { name: "Rosy Stain", value: "#e56b82" },
+                    { name: "Satin Coral Mauve", value: "#d67d73" },
+                    { name: "Classic Soft Red", value: "#cb3b4c" },
+                    { name: "Bare Sheer Lip Gloss", value: "#fca390" }
+                ]
+            }
+        ];
+
+        function initGame() {
+            const stepsContainer = document.getElementById('steps-container');
+            const progressBar = document.getElementById('progress-bar');
+            stepsContainer.innerHTML = "";
+            progressBar.innerHTML = "";
+
+            stepsData.forEach((step, index) => {
+                const dot = document.createElement('span');
+                dot.className = `step-indicator ${index === currentStep ? 'active' : ''}`;
+                dot.id = `ind-${index}`;
+                dot.innerText = index + 1;
+                progressBar.appendChild(dot);
+
+                const stepView = document.createElement('div');
+                stepView.className = `step-content ${index === currentStep ? 'active' : ''}`;
+                stepView.id = `step-view-${index}`;
+
+                stepView.innerHTML = `
+                    <h2>${step.title}</h2>
+                    <p>${step.description}</p>
+                    <div class="options-grid" id="grid-${step.id}"></div>
+                `;
+                stepsContainer.appendChild(stepView);
+                renderStepOptions(index);
+            });
+            updateButtons();
+            updateModelSkin();
+            
+            // Set beautiful translucent pink lip glow base initially
+            document.documentElement.style.setProperty('--lips-color', '#fcaab0');
+        }
+
+        function renderStepOptions(stepIdx) {
+            const step = stepsData[stepIdx];
+            const grid = document.getElementById(`grid-${step.id}`);
+            if (!grid) return;
+            grid.innerHTML = "";
+
+            const activePalette = shadeMatrix[selectedFoundationKey];
+
+            step.options.forEach((opt, oIdx) => {
+                let colorHex = "#e0e0e0"; 
+                let innerPreview = "";
+
+                if (step.id === 'foundation') {
+                    colorHex = opt.preview;
+                } else if (step.id === 'concealer') {
+                    colorHex = opt.type === 'transparent' ? 'transparent' : activePalette.concealer[opt.type];
+                } else if (step.id === 'contour') {
+                    colorHex = opt.type === 'transparent' ? 'transparent' : activePalette.contour[opt.type];
+                } else if (step.id === 'blush') {
+                    colorHex = opt.type === 'transparent' ? 'transparent' : activePalette.blush[opt.type];
+                } else if (step.id === 'eyeshadow' || step.id === 'lips') {
+                    colorHex = opt.value;
+                }
+
+                if (opt.isIcon) {
+                    innerPreview = `<div class="preview-icon-label">${opt.icon}</div>`;
+                } else {
+                    innerPreview = `<div class="color-preview" style="background-color: ${colorHex === 'transparent' ? '#ffffff' : colorHex}; border: ${colorHex === 'transparent' ? '2px dashed #bbb' : '2px solid #ffffff'}"></div>`;
+                }
+
+                const card = document.createElement('div');
+                card.className = "option-card";
+                card.id = `opt-${stepIdx}-${oIdx}`;
+                card.onclick = () => selectOption(stepIdx, oIdx, colorHex, opt);
+                card.innerHTML = `
+                    ${innerPreview}
+                    <span>${opt.name}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function updateModelSkin() {
+            const root = document.documentElement;
+            const activePalette = shadeMatrix[selectedFoundationKey];
+            root.style.setProperty('--skin-base', activePalette.baseSkin);
+        }
+
+        function selectOption(stepIdx, optIdx, resolvedColor, originalOpt) {
+            const step = stepsData[stepIdx];
+            const root = document.documentElement;
+
+            step.options.forEach((_, oIdx) => {
+                const element = document.getElementById(`opt-${stepIdx}-${oIdx}`);
+                if(element) element.classList.remove('selected');
+            });
+            document.getElementById(`opt-${stepIdx}-${optIdx}`).classList.add('selected');
+
+            if (step.id === 'foundation') {
+                selectedFoundationKey = originalOpt.value;
+                updateModelSkin();
+                
+                // Refresh options arrays to synchronize color preview swatches
+                renderStepOptions(1); 
+                renderStepOptions(2); 
+                renderStepOptions(3); 
+                return;
+            }
+
+            // Route matching selections directly into graphic nodes values
+            if (step.id === 'eyeshadow') {
+                root.style.setProperty('--eyeshadow-color', resolvedColor);
+            } else if (step.id === 'eyelashes') {
+                root.style.setProperty('--lash-stroke-width', originalOpt.stroke);
+                root.style.setProperty('--lash-color', originalOpt.color);
+            } else if (step.id === 'lips') {
+                root.style.setProperty('--lips-color', resolvedColor);
+            } else {
+                root.style.setProperty(`--${step.id}-color`, resolvedColor);
+            }
+        }
+
+        function changeStep(direction) {
+            document.getElementById(`step-view-${currentStep}`).classList.remove('active');
+            document.getElementById(`ind-${currentStep}`).classList.remove('active');
+
+            currentStep += direction;
+
+            if (currentStep >= stepsData.length) {
+                currentStep = stepsData.length - 1;
+                alert("✨ Exquisite! Your harmonized custom beauty profile looks amazing! ✨");
+            }
+            if (currentStep < 0) currentStep = 0;
+
+            document.getElementById(`step-view-${currentStep}`).classList.add('active');
+            document.getElementById(`ind-${currentStep}`).classList.add('active');
+
+            updateButtons();
+        }
+
+        function updateButtons() {
+            document.getElementById('btn-prev').disabled = (currentStep === 0);
+            document.getElementById('btn-next').innerText = (currentStep === stepsData.length - 1) ? "Finish" : "Next";
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
